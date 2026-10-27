@@ -19,9 +19,10 @@ public class Areas extends JDialog {        // JDialog en lugar de JFrame para p
         setModal(true);
         armarGUI();
         setTitle("Gestión de Áreas - " + modo);
-        setSize(500, 400);
+        setSize(520, 400);      // con 500 los campos quedaban pegados al borde derecho
         setLayout(null);
         cargarDatos();
+        Utilidades.agregarEncabezado(this, "Gestión de áreas", subtituloSegunModo());
         setLocationRelativeTo(padre); // centrar respecto al padre
         Utilidades.establecerIcono(this);
     }
@@ -53,6 +54,7 @@ public class Areas extends JDialog {        // JDialog en lugar de JFrame para p
         btnAccion = new JButton("Acción");
         btnAccion.setBounds(240, 170, 200, 40);
         btnAccion.addActionListener(click -> ejecutarAccion());
+        Utilidades.estiloBotonPrincipal(btnAccion);
         add(btnAccion);
 
         // Configuración Inicial de la UI según el MODO
@@ -85,6 +87,14 @@ public class Areas extends JDialog {        // JDialog en lugar de JFrame para p
                 txtDesc.setEditable(true);
                 txtPresupuesto.setEditable(false);
                 break;
+        }
+    }
+
+    private String subtituloSegunModo() {
+        switch (modo) {
+            case "ALTA": return "Crear un área con su descripción y presupuesto anual";
+            case "BAJA": return "Solo se pueden eliminar las áreas sin empleados";
+            default: return "Elegí un área para cambiar su descripción";
         }
     }
 

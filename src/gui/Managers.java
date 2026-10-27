@@ -22,6 +22,7 @@ public class Managers extends JDialog {     // JDialog y no JFrame para poder us
         setSize(500, 400);
         setLayout(null);
         cargarLista();
+        Utilidades.agregarEncabezado(this, "Gestión de managers", subtituloSegunModo());
         setLocationRelativeTo(padre); // centrar respecto al padre, es mas responsive que setBounds
         Utilidades.establecerIcono(this);
     }
@@ -47,6 +48,7 @@ public class Managers extends JDialog {     // JDialog y no JFrame para poder us
         btnAccion = new JButton("Acción");
         btnAccion.setBounds(240, 220, 200, 30);
         btnAccion.addActionListener(click -> ejecutarAccion());
+        Utilidades.estiloBotonPrincipal(btnAccion);
         add(btnAccion);
 
         configurarModo();
@@ -71,6 +73,14 @@ public class Managers extends JDialog {     // JDialog y no JFrame para poder us
                 txtAntiguedad.setEditable(false);
                 txtCelular.setEditable(true);
                 break;
+        }
+    }
+
+    private String subtituloSegunModo() {
+        switch (modo) {
+            case "ALTA": return "Registrar un manager con su antigüedad en la empresa";
+            case "BAJA": return "Solo se pueden eliminar los managers sin empleados a cargo";
+            default: return "Elegí un manager para cambiar su celular";
         }
     }
 

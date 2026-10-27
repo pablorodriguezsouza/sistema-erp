@@ -6,6 +6,59 @@ import java.awt.*;
 
 public class Utilidades {
 
+    // Colores de la marca NeoCode (tomados del logo), oscurecidos para que el texto blanco se lea bien encima
+    public static final Color AZUL_MARCA = new Color(27, 79, 194);
+    public static final Color AZUL_MARCA_OSCURO = new Color(20, 60, 150);
+    public static final Color VERDE_MARCA = new Color(11, 127, 110);
+
+    // Franja de color arriba de la ventana, con título y subtítulo.
+    // Envuelve el panel que ya tiene la ventana (con sus setBounds) y agranda la ventana lo que ocupa la franja.
+    public static void agregarEncabezado(JDialog ventana, String titulo, String subtitulo) {
+        JPanel encabezado = new JPanel(new GridLayout(2, 1)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setPaint(new GradientPaint(0, 0, AZUL_MARCA, getWidth(), 0, VERDE_MARCA));   // de azul a verde, como el logo
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        encabezado.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        encabezado.setPreferredSize(new Dimension(0, 64));
+
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 18f));
+        JLabel lblSubtitulo = new JLabel(subtitulo);
+        lblSubtitulo.setForeground(Color.WHITE);
+        encabezado.add(lblTitulo);
+        encabezado.add(lblSubtitulo);
+
+        Container contenidoAnterior = ventana.getContentPane();
+        JPanel nuevoContenido = new JPanel(new BorderLayout());
+        nuevoContenido.add(encabezado, BorderLayout.NORTH);
+        nuevoContenido.add(contenidoAnterior, BorderLayout.CENTER);
+        ventana.setContentPane(nuevoContenido);
+        ventana.setSize(ventana.getWidth(), ventana.getHeight() + 64);
+    }
+
+    // Botón de la acción principal de cada ventana: azul de la marca, letra blanca, más oscuro con el mouse
+    // encima y gris mientras está deshabilitado.
+    public static void estiloBotonPrincipal(JButton boton) {
+        boton.setBackground(AZUL_MARCA);
+        boton.setForeground(Color.WHITE);
+        boton.setFont(boton.getFont().deriveFont(Font.BOLD));
+        boton.setContentAreaFilled(false);      // sin el dibujo de Windows, para que se vea el color
+        boton.setOpaque(true);
+        boton.setFocusPainted(false);
+        boton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        boton.getModel().addChangeListener(cambio -> {
+            if (!boton.isEnabled()) boton.setBackground(new Color(214, 218, 224));
+            else if (boton.getModel().isRollover()) boton.setBackground(AZUL_MARCA_OSCURO);
+            else boton.setBackground(AZUL_MARCA);
+        });
+    }
+
     public static void establecerIcono(Window ventana) {
         try {
             java.net.URL url = Utilidades.class.getResource("/recursos/loguitoEmpresa.png");
@@ -93,7 +146,13 @@ public class Utilidades {
         if (icono != null) lblFondoLogo.setIcon(icono);
         else lblFondoLogo.setText("LOGO EMPRESA");
 
+        ventana.getContentPane().setBackground(Color.WHITE);      // mismo fondo que el logo
         ventana.add(lblFondoLogo, BorderLayout.CENTER);
+
+        JLabel lblAyuda = new JLabel("Elegí una opción del menú de arriba para empezar  ·  F1: acerca del proyecto", SwingConstants.CENTER);
+        lblAyuda.setForeground(new Color(90, 90, 90));
+        lblAyuda.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
+        ventana.add(lblAyuda, BorderLayout.SOUTH);
     }
 
     public static void cargarContenidoBienvenida(JWindow ventana) {

@@ -35,6 +35,7 @@ public class ReporteIA extends JDialog {        // JDialog en lugar de JFrame pa
         JButton btnConsultar = new JButton("Consultar Ventajas/Desventajas");
         btnConsultar.setBounds(20, 60, 250, 30);
         btnConsultar.addActionListener(e -> consultaAsync());
+        Utilidades.estiloBotonPrincipal(btnConsultar);
         add(btnConsultar);
         
         labelEstado = new JLabel(""); 
@@ -44,6 +45,7 @@ public class ReporteIA extends JDialog {        // JDialog en lugar de JFrame pa
         txtResultado.setLineWrap(true);
         JScrollPane scroll = new JScrollPane(txtResultado);
         scroll.setBounds(20, 100, 880, 480); add(scroll);
+        Utilidades.agregarEncabezado(this, "Reporte inteligente (IA)", "Ventajas y desventajas de mover a un empleado de área, según su CV (Google Gemini)");
         setLocationRelativeTo(padre); // centrar respecto al padre
         Utilidades.establecerIcono(this);
     }

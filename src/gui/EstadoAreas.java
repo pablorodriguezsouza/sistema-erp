@@ -54,7 +54,8 @@ public class EstadoAreas extends JDialog {
         JScrollPane scrollGrid = new JScrollPane(panelBotones);
         scrollGrid.setBounds(250, 60, 500, 460);
         add(scrollGrid);
-        
+
+        Utilidades.agregarEncabezado(this, "Estado de áreas", "Rojo: más del 90 % del presupuesto usado  ·  Amarillo: más del 70 %");
         setLocationRelativeTo(padre); // centrar respecto al padre
         Utilidades.establecerIcono(this);
     }
