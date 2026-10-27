@@ -88,8 +88,8 @@ public class ReporteIA extends JDialog {        // JDialog en lugar de JFrame pa
         String apiKey = System.getenv("ERP_API_KEY");
         if (apiKey == null) return "Falta Variable de Entorno ERP_API_KEY";
            
-        // Usamos el modelo 2.5 que es el que pide la letra
-        String urlStr = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
+        // La letra pedía gemini-2.5-flash, pero Google lo dio de baja para claves nuevas: se usa su reemplazo
+        String urlStr = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=" + apiKey;
         URL url = new URL(urlStr);
         
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
