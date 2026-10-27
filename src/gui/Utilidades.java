@@ -11,9 +11,8 @@ public class Utilidades {
     public static final Color AZUL_MARCA_OSCURO = new Color(20, 60, 150);
     public static final Color VERDE_MARCA = new Color(11, 127, 110);
 
-    // Franja de color arriba de la ventana, con título y subtítulo.
-    // Envuelve el panel que ya tiene la ventana (con sus setBounds) y agranda la ventana lo que ocupa la franja.
-    public static void agregarEncabezado(JDialog ventana, String titulo, String subtitulo) {
+    // Franja de color con título y subtítulo (la usan el menú principal y agregarEncabezado).
+    public static JPanel crearEncabezado(String titulo, String subtitulo) {
         JPanel encabezado = new JPanel(new GridLayout(2, 1)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -32,7 +31,13 @@ public class Utilidades {
         lblSubtitulo.setForeground(Color.WHITE);
         encabezado.add(lblTitulo);
         encabezado.add(lblSubtitulo);
+        return encabezado;
+    }
 
+    // Pone la franja arriba de una ventana. Envuelve el panel que ya tiene la ventana (con sus setBounds)
+    // y agranda la ventana lo que ocupa la franja.
+    public static void agregarEncabezado(JDialog ventana, String titulo, String subtitulo) {
+        JPanel encabezado = crearEncabezado(titulo, subtitulo);
         Container contenidoAnterior = ventana.getContentPane();
         JPanel nuevoContenido = new JPanel(new BorderLayout());
         nuevoContenido.add(encabezado, BorderLayout.NORTH);
@@ -49,13 +54,47 @@ public class Utilidades {
         boton.setFont(boton.getFont().deriveFont(Font.BOLD));
         boton.setContentAreaFilled(false);      // sin el dibujo de Windows, para que se vea el color
         boton.setOpaque(true);
-        boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
         boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        marcarFoco(boton);
         boton.getModel().addChangeListener(cambio -> {
             if (!boton.isEnabled()) boton.setBackground(new Color(214, 218, 224));
             else if (boton.getModel().isRollover()) boton.setBackground(AZUL_MARCA_OSCURO);
             else boton.setBackground(AZUL_MARCA);
+        });
+    }
+
+    // Botón de las acciones del menú principal: celeste claro con letra azul, más oscuro con el mouse encima.
+    public static void estiloBotonSecundario(JButton boton) {
+        Color fondo = new Color(236, 242, 252);
+        boton.setBackground(fondo);
+        boton.setForeground(AZUL_MARCA_OSCURO);
+        boton.setFont(UIManager.getFont("Label.font").deriveFont(Font.BOLD, 13f));     // la misma letra que el resto de la app
+        boton.setHorizontalAlignment(SwingConstants.LEFT);
+        boton.setContentAreaFilled(false);      // sin el dibujo de Windows, para que se vea el color
+        boton.setOpaque(true);
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        marcarFoco(boton);
+        boton.getModel().addChangeListener(cambio -> boton.setBackground(boton.getModel().isRollover() ? new Color(214, 228, 250) : fondo));
+    }
+
+    // Borde que muestra qué botón tiene el foco del teclado (al recorrer con Tab), sin cambiar su tamaño.
+    // Además el botón se activa con Enter, no solo con Espacio (lo que trae Swing).
+    private static void marcarFoco(JButton boton) {
+        boton.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0, false), "pressed");
+        boton.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0, true), "released");
+        boton.setFocusPainted(false);
+        boton.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
+        boton.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                boton.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(18, 38, 63), 2),
+                        BorderFactory.createEmptyBorder(6, 12, 6, 12)));
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                boton.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
+            }
         });
     }
 
@@ -136,24 +175,6 @@ public class Utilidades {
         public int getIconHeight() { return alto; }
     }
     
-    public static void cargarLogoPrincipal(JFrame ventana) {
-        establecerIcono(ventana);
-        JLabel lblFondoLogo = new JLabel();
-        lblFondoLogo.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        Icon icono = cargarImagenEscalada("/recursos/logoEmpresa.png", 350, 350);
-        
-        if (icono != null) lblFondoLogo.setIcon(icono);
-        else lblFondoLogo.setText("LOGO EMPRESA");
-
-        ventana.getContentPane().setBackground(Color.WHITE);      // mismo fondo que el logo
-        ventana.add(lblFondoLogo, BorderLayout.CENTER);
-
-        JLabel lblAyuda = new JLabel("Elegí una opción del menú de arriba para empezar  ·  F1: acerca del proyecto", SwingConstants.CENTER);
-        lblAyuda.setForeground(new Color(90, 90, 90));
-        lblAyuda.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
-        ventana.add(lblAyuda, BorderLayout.SOUTH);
-    }
 
     public static void cargarContenidoBienvenida(JWindow ventana) {
         JPanel panel = new JPanel(new BorderLayout());

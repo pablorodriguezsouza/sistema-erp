@@ -1,21 +1,27 @@
 package gui;
 
 import dominio.Sistema;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+// Pantalla de inicio: una tarjeta por tema (Áreas, Managers, Empleados, Reportes) con sus acciones a la vista,
+// en lugar de un menú desplegable. Cada tarjeta muestra un resumen que se actualiza al cerrar cada ventana.
 public class Menu extends JFrame {
     private Sistema sistema;
+    private JLabel lblAreas, lblManagers, lblEmpleados, lblMovimientos;
 
     public Menu(Sistema sistema) {
         this.sistema = sistema;
-        
+
         armarGUI();
+        actualizarResumen();
         setTitle("ERP NEOCODE TECH - Menú Principal");
-        setSize(600, 500);
+        setSize(820, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centrar en pantalla
-        
+        Utilidades.establecerIcono(this);
+
         // Guardar al cerrar
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -27,84 +33,98 @@ public class Menu extends JFrame {
                 }
             }
         });
-        Utilidades.cargarLogoPrincipal(this);
     }
 
     private void armarGUI() {
-            JMenuBar menuBar = new JMenuBar();
+        lblAreas = new JLabel();
+        lblManagers = new JLabel();
+        lblEmpleados = new JLabel();
+        lblMovimientos = new JLabel();
 
-            // MENÚ ÁREAS
-            JMenu menuAreas = new JMenu("Áreas");
+        JPanel tarjetas = new JPanel(new GridLayout(2, 2, 16, 16));
+        tarjetas.setBackground(new Color(245, 247, 250));
+        tarjetas.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-            JMenuItem itemAltaArea = new JMenuItem("Alta");
-            itemAltaArea.addActionListener(click -> new Areas(sistema, "ALTA", this).setVisible(true));
-            menuAreas.add(itemAltaArea);
+        tarjetas.add(crearTarjeta("Áreas", lblAreas,
+                crearBoton("Nueva área", click -> new Areas(sistema, "ALTA", this).setVisible(true)),
+                crearBoton("Dar de baja un área", click -> new Areas(sistema, "BAJA", this).setVisible(true)),
+                crearBoton("Modificar descripción", click -> new Areas(sistema, "MODIFICACIÓN", this).setVisible(true))));
 
-            JMenuItem itemBajaArea = new JMenuItem("Baja");
-            itemBajaArea.addActionListener(click -> new Areas(sistema, "BAJA", this).setVisible(true));
-            menuAreas.add(itemBajaArea);
+        tarjetas.add(crearTarjeta("Managers", lblManagers,
+                crearBoton("Nuevo manager", click -> new Managers(sistema, "ALTA", this).setVisible(true)),
+                crearBoton("Dar de baja un manager", click -> new Managers(sistema, "BAJA", this).setVisible(true)),
+                crearBoton("Cambiar celular", click -> new Managers(sistema, "MODIFICACIÓN", this).setVisible(true))));
 
-            JMenuItem itemModifArea = new JMenuItem("Modificación");
-            itemModifArea.addActionListener(click -> new Areas(sistema, "MODIFICACIÓN", this).setVisible(true));
-            menuAreas.add(itemModifArea);
+        tarjetas.add(crearTarjeta("Empleados", lblEmpleados,
+                crearBoton("Nuevo empleado", click -> new AltaEmpleado(sistema, this).setVisible(true)),
+                crearBoton("Mover a otra área", click -> new Movimientos(sistema, this).setVisible(true))));
 
-            JMenuItem itemMovimiento = new JMenuItem("Realizar Movimiento");
-            itemMovimiento.addActionListener(click -> new Movimientos(sistema, this).setVisible(true));
-            menuAreas.add(itemMovimiento);
+        tarjetas.add(crearTarjeta("Reportes", lblMovimientos,
+                crearBoton("Estado de áreas", click -> new EstadoAreas(sistema, this).setVisible(true)),
+                crearBoton("Movimientos", click -> new ReportesMovimientos(sistema, this).setVisible(true)),
+                crearBoton("Reporte inteligente (IA)", click -> new ReporteIA(sistema, this).setVisible(true))));
 
-            menuBar.add(menuAreas);
+        JLabel lblAyuda = new JLabel("Tab y Enter para moverse con el teclado  ·  F1: acerca del proyecto", SwingConstants.CENTER);
+        lblAyuda.setForeground(new Color(90, 90, 90));
+        lblAyuda.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
 
-            // MANAGERS
-            JMenu menuManagers = new JMenu("Managers");
+        JPanel contenido = new JPanel(new BorderLayout());
+        contenido.setBackground(new Color(245, 247, 250));
+        contenido.add(Utilidades.crearEncabezado("ERP NeoCode Tech", "Gestión de personal: elegí qué querés hacer"), BorderLayout.NORTH);
+        contenido.add(tarjetas, BorderLayout.CENTER);
+        contenido.add(lblAyuda, BorderLayout.SOUTH);
+        setContentPane(contenido);
 
-            JMenuItem itemAltaMgr = new JMenuItem("Alta");
-            itemAltaMgr.addActionListener(click -> new Managers(sistema, "ALTA", this).setVisible(true));
-            menuManagers.add(itemAltaMgr);
+        // F1 (funciona aunque el foco esté en un botón)
+        getRootPane().registerKeyboardAction(
+                click -> JOptionPane.showMessageDialog(this, "Proyecto académico\nProgramación II - Universidad ORT Uruguay"),
+                KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 
-            JMenuItem itemBajaMgr = new JMenuItem("Baja");
-            itemBajaMgr.addActionListener(click -> new Managers(sistema, "BAJA", this).setVisible(true));
-            menuManagers.add(itemBajaMgr);
+    // Tarjeta blanca con título, resumen y los botones de sus acciones uno debajo del otro.
+    private JPanel crearTarjeta(String titulo, JLabel resumen, JButton... botones) {
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(lblTitulo.getFont().deriveFont(Font.BOLD, 17f));
+        lblTitulo.setForeground(new Color(18, 38, 63));
+        resumen.setForeground(new Color(90, 90, 90));
 
-            JMenuItem itemModifMgr = new JMenuItem("Modificación");
-            itemModifMgr.addActionListener(click -> new Managers(sistema, "MODIFICACIÓN", this).setVisible(true));
-            menuManagers.add(itemModifMgr);
+        JPanel cabecera = new JPanel(new GridLayout(2, 1));
+        cabecera.setOpaque(false);
+        cabecera.add(lblTitulo);
+        cabecera.add(resumen);
 
-            menuBar.add(menuManagers);
+        JPanel acciones = new JPanel(new GridLayout(0, 1, 0, 6));
+        acciones.setOpaque(false);
+        for (JButton boton : botones) acciones.add(boton);
+        // En el NORTH de un BorderLayout los botones toman su alto normal en vez de estirarse a toda la tarjeta
+        JPanel contenedorAcciones = new JPanel(new BorderLayout());
+        contenedorAcciones.setOpaque(false);
+        contenedorAcciones.add(acciones, BorderLayout.NORTH);
 
-            // MENÚ EMPLEADOS
-            JMenu menuEmps = new JMenu("Empleados");
-            JMenuItem itemEmpsAlta = new JMenuItem("Alta");
-            itemEmpsAlta.addActionListener(click -> new AltaEmpleado(sistema, this).setVisible(true));
-            menuEmps.add(itemEmpsAlta);
-            menuBar.add(menuEmps);
+        JPanel tarjeta = new JPanel(new BorderLayout(0, 12));
+        tarjeta.setBackground(Color.WHITE);
+        tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 227, 236)),
+                BorderFactory.createEmptyBorder(14, 16, 14, 16)));
+        tarjeta.add(cabecera, BorderLayout.NORTH);
+        tarjeta.add(contenedorAcciones, BorderLayout.CENTER);
+        return tarjeta;
+    }
 
-            // MENÚ REPORTES
-            JMenu menuReportes = new JMenu("Reportes");
+    // Botón de una acción. Las ventanas son modales: setVisible espera a que se cierren,
+    // así que después se puede actualizar el resumen con lo que haya cambiado.
+    private JButton crearBoton(String texto, ActionListener accion) {
+        JButton boton = new JButton(texto);
+        Utilidades.estiloBotonSecundario(boton);
+        boton.addActionListener(accion);
+        boton.addActionListener(click -> actualizarResumen());
+        return boton;
+    }
 
-            JMenuItem itemRepIA = new JMenuItem("Reporte Inteligente (IA)");
-            itemRepIA.addActionListener(click -> new ReporteIA(sistema, this).setVisible(true));
-            menuReportes.add(itemRepIA);
-
-            JMenuItem itemRepEstado = new JMenuItem("Estado de Áreas");
-            itemRepEstado.addActionListener(click -> new EstadoAreas(sistema, this).setVisible(true));
-            menuReportes.add(itemRepEstado);
-
-            JMenuItem itemRepMov = new JMenuItem("Reporte Movimientos");
-            itemRepMov.addActionListener(click -> new ReportesMovimientos(sistema, this).setVisible(true));
-            menuReportes.add(itemRepMov);
-
-            menuBar.add(menuReportes);
-
-            setJMenuBar(menuBar);
-
-            // F1
-            this.setFocusable(true);
-            this.addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent key) {
-                    if (key.getKeyCode() == KeyEvent.VK_F1) {
-                        JOptionPane.showMessageDialog(null, "Proyecto académico\nProgramación II - Universidad ORT Uruguay");
-                    }
-                }
-            });
-        }
+    private void actualizarResumen() {
+        lblAreas.setText(sistema.getListaAreas().size() + " áreas");
+        lblManagers.setText(sistema.getListaManagers().size() + " managers");
+        lblEmpleados.setText(sistema.getListaEmpleados().size() + " empleados");
+        lblMovimientos.setText(sistema.getListaMovimientos().size() + " movimientos registrados");
+    }
 }
