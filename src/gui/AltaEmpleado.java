@@ -18,7 +18,7 @@ public class AltaEmpleado extends JDialog  {        // JDialog en lugar de JFram
         
         setModal(true);
         armarGUI();
-        setSize(600, 400);
+        setSize(600, 420);      // con 400 el botón Agregar quedaba cortado abajo
         setLayout(null);
         setTitle("Alta de Empleados");
         cargarListas();
