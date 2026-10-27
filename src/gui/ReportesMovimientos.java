@@ -24,6 +24,7 @@ public class ReportesMovimientos extends JDialog {      // JDialog en lugar de J
         setLayout(null);
         cargarFiltros();
         filtrar();
+        Utilidades.agregarEncabezado(this, "Reporte de movimientos", "Filtrá por mes, área o empleado y exportá el resultado a CSV");
         setLocationRelativeTo(padre); // centrar respecto al padre
         Utilidades.establecerIcono(this);
     }

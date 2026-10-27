@@ -18,15 +18,12 @@ public class Movimientos extends JDialog {     // JDialog en lugar de JFrame par
         setSize(500, 350);
         setLayout(null);
         cargarDatos();
+        Utilidades.agregarEncabezado(this, "Realizar movimiento", "Transferencia de personal: el costo de los meses que faltan pasa al área de destino");
         setLocationRelativeTo(padre); // centrar respecto al padre, es mas responsive que setBounds
         Utilidades.establecerIcono(this);
     }
 
     private void armarGUI() {
-        JLabel lblTitulo = new JLabel("Transferencia de Personal");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 14));
-        lblTitulo.setBounds(150, 20, 200, 20); add(lblTitulo);
-
         // Mes
         crearLabel("Mes del Movimiento:", 50, 60);
         cmbMes = new JComboBox<>();
@@ -54,6 +51,7 @@ public class Movimientos extends JDialog {     // JDialog en lugar de JFrame par
         JButton btnMover = new JButton("Confirmar Movimiento");
         btnMover.setBounds(150, 240, 200, 40);
         btnMover.addActionListener(click -> realizarMovimiento());
+        Utilidades.estiloBotonPrincipal(btnMover);
         add(btnMover);
     }
 

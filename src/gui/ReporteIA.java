@@ -2,6 +2,7 @@ package gui;
 
 import dominio.*;
 import javax.swing.*;
+import java.awt.Insets;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,6 +36,7 @@ public class ReporteIA extends JDialog {        // JDialog en lugar de JFrame pa
         JButton btnConsultar = new JButton("Consultar Ventajas/Desventajas");
         btnConsultar.setBounds(20, 60, 250, 30);
         btnConsultar.addActionListener(e -> consultaAsync());
+        Utilidades.estiloBotonPrincipal(btnConsultar);
         add(btnConsultar);
         
         labelEstado = new JLabel(""); 
@@ -42,8 +44,12 @@ public class ReporteIA extends JDialog {        // JDialog en lugar de JFrame pa
 
         txtResultado = new JTextArea();
         txtResultado.setLineWrap(true);
+        txtResultado.setWrapStyleWord(true);        // corta las líneas en palabras completas
+        txtResultado.setFont(UIManager.getFont("Label.font").deriveFont(14f));      // la letra de la app, no la de máquina de escribir
+        txtResultado.setMargin(new Insets(10, 12, 10, 12));
         JScrollPane scroll = new JScrollPane(txtResultado);
         scroll.setBounds(20, 100, 880, 480); add(scroll);
+        Utilidades.agregarEncabezado(this, "Reporte inteligente (IA)", "Ventajas y desventajas de mover a un empleado de área, según su CV (Google Gemini)");
         setLocationRelativeTo(padre); // centrar respecto al padre
         Utilidades.establecerIcono(this);
     }

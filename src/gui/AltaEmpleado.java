@@ -18,10 +18,11 @@ public class AltaEmpleado extends JDialog  {        // JDialog en lugar de JFram
         
         setModal(true);
         armarGUI();
-        setSize(600, 400);
+        setSize(600, 420);      // con 400 el botón Agregar quedaba cortado abajo
         setLayout(null);
         setTitle("Alta de Empleados");
         cargarListas();
+        Utilidades.agregarEncabezado(this, "Alta de empleados", "Datos del empleado, su manager y el área donde trabaja");
         setLocationRelativeTo(padre); // centrar respecto al padre, es mas responsive que setBounds
         Utilidades.establecerIcono(this);
     }
@@ -57,6 +58,7 @@ public class AltaEmpleado extends JDialog  {        // JDialog en lugar de JFram
         JButton btnAgregar = new JButton("Agregar");
         btnAgregar.setBounds(100, 330, 100, 30);
         btnAgregar.addActionListener(click -> agregarEmpleado());
+        Utilidades.estiloBotonPrincipal(btnAgregar);
         add(btnAgregar);
 
         listaEmpleados = new JList<>();

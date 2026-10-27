@@ -4,9 +4,15 @@ import gui.Bienvenida;
 import gui.Menu;
 import java.io.File;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class Main {
     public static void main(String[] args) {
+        // Aspecto de Windows (o del sistema operativo que sea) en lugar del aspecto por defecto de Java
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {}   // si no se puede, queda el aspecto por defecto
+
         Bienvenida inicio = new Bienvenida();
         inicio.setVisible(true);
         

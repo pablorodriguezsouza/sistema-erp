@@ -32,12 +32,15 @@ inteligencia artificial (Google Gemini) de las ventajas y desventajas de mover a
 |---|---|
 | ![Bienvenida](docs/capturas/01-bienvenida.png) | ![Alta de empleados](docs/capturas/03-alta-empleado.png) |
 | ![Estado de áreas](docs/capturas/04-estado-areas.png) | ![Movimiento](docs/capturas/05-movimiento.png) |
-| ![Reporte de movimientos](docs/capturas/06-reporte-movimientos.png) | ![Reporte con IA](docs/capturas/07-reporte-ia.png) |
+| ![Reporte de movimientos](docs/capturas/06-reporte-movimientos.png) | |
 
 ## Cómo está hecho
 
 - **Java 8** con **Swing**. Las pantallas se maquetaron con el diseñador de NetBeans y el comportamiento está
   escrito a mano.
+- Interfaz con el aspecto del sistema operativo y la identidad de NeoCode: cada ventana tiene un encabezado con
+  los colores del logo y su acción principal destacada (`gui/Utilidades`: `agregarEncabezado` y
+  `estiloBotonPrincipal`).
 - Separación en paquetes:
   - `dominio`: las clases del negocio (`Sistema`, `Area`, `Manager`, `Empleado`, `Movimiento`), sin código de interfaz.
   - `gui`: las ventanas, que solo usan el dominio.
