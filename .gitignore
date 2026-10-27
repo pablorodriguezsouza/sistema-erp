@@ -12,3 +12,7 @@ nbproject/private/
 # Datos que genera la app al usarse
 *.ser
 cvs/
+
+# Copia local de config.ejemplo con una clave real: nunca se sube
+config
+.env
