@@ -1,0 +1,5 @@
+# Texto con finales de linea normalizados en el repositorio; binarios sin tocar.
+* text=auto
+*.png binary
+*.jpg binary
+*.jar binary

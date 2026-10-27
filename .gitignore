@@ -1,0 +1,14 @@
+# Compilacion de NetBeans (se regenera con Build)
+build/
+dist/
+*.class
+
+# Configuracion local de NetBeans de cada PC
+nbproject/private/
+
+# Comprimidos de la entrega
+*.rar
+
+# Datos que genera la app al usarse
+*.ser
+cvs/
