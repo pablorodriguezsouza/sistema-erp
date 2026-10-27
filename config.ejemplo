@@ -1,0 +1,11 @@
+# Clave de la API de Google Gemini para el "Reporte Inteligente (IA)".
+#
+# El programa NO lee este archivo: lee la variable de entorno ERP_API_KEY.
+# Este archivo solo muestra qué variable hay que crear. Nunca escribas la clave
+# en el código ni la subas al repositorio.
+#
+# Windows (PowerShell), una sola vez; después hay que reabrir NetBeans o la terminal:
+#   setx ERP_API_KEY "tu-clave"
+#
+# La clave se crea gratis en https://aistudio.google.com/apikey
+ERP_API_KEY=
